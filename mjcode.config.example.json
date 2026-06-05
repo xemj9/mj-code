@@ -1,0 +1,17 @@
+{
+  "provider": "openai-compatible",
+  "model": "gpt-4o",
+  "baseUrl": "https://api.openai.com/v1",
+  "apiKey": "sk-your-api-key-here",
+  "authMode": "bearer",
+  "streamOutput": true,
+  "permissionMode": "workspace-write",
+  "approvalPolicy": "on-write",
+  "networkMode": "docs-only",
+  "maxSteps": 100,
+  "maxTokens": 80000,
+  "temperature": 0.2,
+  "shellTimeoutMs": 30000,
+  "maxOutputChars": 12000,
+  "extraHeaders": {}
+}

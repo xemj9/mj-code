@@ -1,0 +1,26 @@
+{
+  "goal": "Continue turning MJ Code into a deeply capable, TS-first terminal coding CLI. Favor stable, reviewable progress on core coding workflows, context/memory, shell/runtime integrity, MCP, skills, and terminal-first UX over broad speculative features.",
+  "reviewerCommand": "codex exec --cwd {repo_root}",
+  "workerCommand": "opencode run --cwd {repo_root}",
+  "maxIterations": 6,
+  "stateDir": ".mj-code/overnight",
+  "verifyCommands": [
+    "npm run typecheck",
+    "npm run build",
+    "npm test"
+  ],
+  "agentTimeoutMs": 2700000,
+  "verifyTimeoutMs": 1200000,
+  "diffPaths": [
+    "src",
+    "test",
+    "README.md",
+    "package.json",
+    "tsconfig.base.json",
+    "tsconfig.build.json",
+    "tsconfig.typecheck.json",
+    "MJ.md"
+  ],
+  "diffMaxChars": 14000,
+  "outputMaxChars": 14000
+}

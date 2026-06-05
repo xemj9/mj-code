@@ -1,0 +1,12 @@
+.mj-code/
+node_modules/
+dist/
+*.map
+.DS_Store
+.env
+.env.*
+!.env.example
+overnight.director.json
+!overnight.director.example.json
+mjcode.config.json
+!mjcode.config.example.json

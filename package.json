@@ -1,0 +1,63 @@
+{
+  "name": "mj-code",
+  "version": "0.1.0",
+  "description": "MJ Code — An open-source terminal coding agent with intelligent routing, verification, and repair.",
+  "type": "module",
+  "bin": {
+    "mj-code": "./dist/cli.mjs"
+  },
+  "files": [
+    "dist/",
+    "src/builtin/",
+    "MJ.md",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "dev": "node --import tsx ./src/cli.mjs",
+    "start": "node --import tsx ./src/cli.mjs",
+    "start:dist": "node ./dist/cli.mjs",
+    "run": "node --import tsx ./src/cli.mjs run",
+    "smoke:mock": "node --import tsx ./src/cli.mjs --provider mock run \"What is the current working directory?\"",
+    "overnight:director": "node --import tsx ./scripts/overnight-director.mjs",
+    "test": "node --import tsx --test",
+    "typecheck": "tsc -p tsconfig.typecheck.json --pretty false",
+    "build": "tsc -p tsconfig.build.json --pretty false",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "coding-agent",
+    "terminal",
+    "cli",
+    "coding",
+    "llm",
+    "openai",
+    "anthropic",
+    "moe",
+    "mcp",
+    "tool-calling",
+    "autonomous-agent"
+  ],
+  "author": "谢明锦 / Xie Mingjin",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xemj9/mj-code.git"
+  },
+  "homepage": "https://github.com/xemj9/mj-code#readme",
+  "bugs": {
+    "url": "https://github.com/xemj9/mj-code/issues"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  }
+}

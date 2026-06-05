@@ -1,0 +1,26 @@
+{
+  "id": "repo-maintainer",
+  "title": "Repo Maintainer",
+  "description": "Bias toward surgical edits, tests, and documentation sync when working inside repositories.",
+  "version": "1.0.0",
+  "enabled": true,
+  "autoAttach": false,
+  "tags": ["engineering", "testing", "docs"],
+  "promptFile": "prompt.md",
+  "workflowHints": [
+    "Inspect the existing code path before editing.",
+    "Prefer small patches over broad rewrites.",
+    "Update tests and README when behavior changes."
+  ],
+  "retrievalHints": [
+    "Check package.json, README.md, and existing tests before implementing new runtime behavior.",
+    "Look for existing module boundaries and extend them instead of creating parallel systems."
+  ],
+  "toolPreferences": {
+    "prefer": ["search_files", "read_file", "apply_patch"],
+    "avoid": ["write_file"]
+  },
+  "outputPolicy": [
+    "Summarize implementation, verification, and remaining risks."
+  ]
+}

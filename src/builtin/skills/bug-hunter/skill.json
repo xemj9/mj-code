@@ -1,0 +1,29 @@
+{
+  "id": "bug-hunter",
+  "title": "Bug Hunter",
+  "description": "Systematic bug diagnosis: reproduce, trace root cause, fix, and verify. Optimized for debugging workflows.",
+  "version": "1.0.0",
+  "enabled": true,
+  "autoAttach": false,
+  "tags": ["debugging", "bug-fix", "diagnosis"],
+  "promptFile": "prompt.md",
+  "workflowHints": [
+    "Read the error message or stack trace first.",
+    "Reproduce the issue if possible before attempting a fix.",
+    "Trace the root cause, don't just patch the symptom.",
+    "Verify the fix with the same test that exposed the bug."
+  ],
+  "retrievalHints": [
+    "Search for error messages, stack traces, and related test files.",
+    "Look for recent changes to the affected files."
+  ],
+  "toolPreferences": {
+    "prefer": ["search_files", "read_file", "run_shell", "apply_patch"],
+    "avoid": ["write_file", "web_search"]
+  },
+  "outputPolicy": [
+    "State the root cause clearly.",
+    "Explain why the fix addresses the root cause.",
+    "Report whether the fix was verified."
+  ]
+}

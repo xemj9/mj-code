@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": [
+    "src/**/*.mjs",
+    "src/**/*.mts",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "test/**/*.mjs",
+    "test/**/*.mts",
+    "test/**/*.ts"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "docs-research",
+  "title": "Docs Research",
+  "description": "Bias toward official documentation, citations, and source-qualified summaries.",
+  "version": "1.0.0",
+  "enabled": true,
+  "autoAttach": false,
+  "tags": ["docs", "research", "citations"],
+  "promptFile": "prompt.md",
+  "workflowHints": [
+    "Prefer official docs and primary sources before secondary writeups.",
+    "Preserve source-qualified names when multiple tools or providers overlap."
+  ],
+  "retrievalHints": [
+    "Use docs-first retrieval and canonical URLs when possible."
+  ],
+  "toolPreferences": {
+    "prefer": ["web_search", "fetch_url", "extract_content"]
+  },
+  "outputPolicy": [
+    "Include citations when web-derived sources inform the answer."
+  ]
+}

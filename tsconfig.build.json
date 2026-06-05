@@ -1,0 +1,43 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "inlineSources": true
+  },
+  "include": [
+    "src/**/*.mjs",
+    "src/**/*.mts",
+    "src/**/*.ts",
+    "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/agent.mjs",
+    "src/lib/agent-core.mjs",
+    "src/lib/apply-patch.mjs",
+    "src/lib/capability-registry.mjs",
+    "src/lib/capability-types.mjs",
+    "src/lib/circuit-breaker.mjs",
+    "src/lib/execution-journal.mjs",
+    "src/lib/extension-state-store.mjs",
+    "src/lib/content-extractor.mjs",
+    "src/lib/mcp-errors.mjs",
+    "src/lib/json-protocol.mjs",
+    "src/lib/path-utils.mjs",
+    "src/lib/project-instructions.mjs",
+    "src/lib/skill-loader.mjs",
+    "src/lib/source-ranker.mjs",
+    "src/lib/web-cache.mjs",
+    "src/lib/web-policy.mjs",
+    "src/lib/web-provider-brave.mjs",
+    "src/lib/web-provider-fallback.mjs",
+    "src/lib/web-search-providers.mjs",
+    "src/tools/filesystem.mjs",
+    "src/tools/patch.mjs",
+    "src/tools/web.mjs"
+  ]
+}

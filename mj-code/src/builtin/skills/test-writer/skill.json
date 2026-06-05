@@ -1,0 +1,27 @@
+{
+  "id": "test-writer",
+  "title": "Test Writer",
+  "description": "Write tests for existing code. Covers happy paths, edge cases, and error conditions.",
+  "version": "1.0.0",
+  "enabled": true,
+  "autoAttach": false,
+  "tags": ["testing", "quality", "verification"],
+  "promptFile": "prompt.md",
+  "workflowHints": [
+    "Read the implementation before writing tests.",
+    "Cover happy path first, then edge cases, then error conditions.",
+    "Use the project's existing test framework and patterns."
+  ],
+  "retrievalHints": [
+    "Find existing test files to match the project's test patterns.",
+    "Search for the module's public API and exported functions."
+  ],
+  "toolPreferences": {
+    "prefer": ["read_file", "search_files", "apply_patch"],
+    "avoid": []
+  },
+  "outputPolicy": [
+    "List what is tested and what is not yet covered.",
+    "Run the new tests and report results."
+  ]
+}

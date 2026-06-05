@@ -1,0 +1,28 @@
+{
+  "id": "code-reviewer",
+  "title": "Code Reviewer",
+  "description": "Review code for correctness, style, security, and performance issues. Provides structured feedback without making changes.",
+  "version": "1.0.0",
+  "enabled": true,
+  "autoAttach": false,
+  "tags": ["review", "quality", "security"],
+  "promptFile": "prompt.md",
+  "workflowHints": [
+    "Read the full diff or file before commenting.",
+    "Organize feedback by severity: critical, important, minor.",
+    "Suggest specific improvements, don't just point out problems."
+  ],
+  "retrievalHints": [
+    "Check related files, tests, and documentation.",
+    "Look for similar patterns elsewhere in the codebase."
+  ],
+  "toolPreferences": {
+    "prefer": ["read_file", "search_files"],
+    "avoid": ["write_file", "replace_in_file", "apply_patch"]
+  },
+  "outputPolicy": [
+    "Organize feedback by severity.",
+    "Include specific line references.",
+    "End with a summary and overall assessment."
+  ]
+}
