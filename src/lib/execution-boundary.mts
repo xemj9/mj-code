@@ -486,13 +486,15 @@ function evaluateShellBoundary({
   let forceApproval = false;
 
   if (!allowInWorkspaceWrite && permissionMode === "workspace-write") {
-    // In workspace-write mode, allow safe read-only commands but block
-    // commands that could modify the system or require elevated access.
+    // In workspace-write mode, allow safe read-only commands and safe
+    // workspace-modifying commands (mkdir, touch, cp, mv within workspace).
+    // Dangerous commands that could modify the system still require full-access.
     const isReadOnlyCommand = looksLikeReadOnlyShellCommand(rendered);
-    if (!isReadOnlyCommand) {
-      blockedReason = 'Shell execution requires full-access mode for this command. Read-only commands like ls, cat, git status are allowed in workspace-write mode.';
+    const isSafeWriteCommand = looksLikeSafeWriteShellCommand(rendered, workspaceRoot);
+    if (!isReadOnlyCommand && !isSafeWriteCommand) {
+      blockedReason = 'Shell execution requires full-access mode for this command. Read-only commands like ls, cat, git status and safe write commands like mkdir, touch are allowed in workspace-write mode.';
     } else {
-      // Even read-only commands in workspace-write mode need approval if high-risk
+      // Even safe commands in workspace-write mode need approval if high-risk
       forceApproval = classification.highRisk;
     }
   }
@@ -541,6 +543,33 @@ function evaluateShellBoundary({
     blockedReason,
     forceApproval,
   };
+}
+
+/**
+ * Heuristic to determine if a shell command is a safe write operation
+ * (mkdir, touch, cp, mv) that is allowed in workspace-write mode.
+ * These commands modify the filesystem but are low-risk enough to
+ * allow with user approval rather than hard-blocking.
+ */
+function looksLikeSafeWriteShellCommand(renderedCommand: string, workspaceRoot: string): boolean {
+  const trimmed = renderedCommand.trim();
+
+  const safeWritePrefixes = [
+    /^mkdir\b/i,
+    /^touch\b/i,
+    /^cp\b/i,
+    /^mv\b/i,
+    /^ln\s+-s\b/i,
+    /^tee\b/i,
+  ];
+
+  for (const pattern of safeWritePrefixes) {
+    if (pattern.test(trimmed)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /**

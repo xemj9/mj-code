@@ -341,7 +341,13 @@ export async function executeAgentTool(
   });
 
   if (!boundaryDecision.permissionDecision.allowed) {
-    const reason = boundaryDecision.permissionDecision.reason ?? `Tool "${toolName}" was blocked.`;
+    const rawReason = boundaryDecision.permissionDecision.reason ?? `Tool "${toolName}" was blocked.`;
+    // Enrich the feedback for the LLM so it can adapt instead of retrying the
+    // same blocked action in a loop.
+    const isPathOutside = rawReason.includes("outside the workspace");
+    const reason = isPathOutside
+      ? `${rawReason} To write files outside the workspace, either: (1) write the file inside the workspace first and then use a shell command to copy it, or (2) ask the user to switch to full-access mode.`
+      : rawReason;
     dependencies.ui.printWarning?.(reason);
     turnState.toolEvents.push({
       tool: toolName,
@@ -438,7 +444,13 @@ export async function executeAgentTool(
     if (!approved) {
       dependencies.approvalStats.denied += 1;
       turnState.approvalsDenied += 1;
-      const message = "User denied approval.";
+      // Include contextual hints in the denial message so the LLM can adjust
+      // its approach instead of blindly retrying the same path.
+      const boundaryReason = boundaryDecision.permissionDecision.reason;
+      const isOutsideWorkspace = boundaryReason?.includes("outside workspace");
+      const message = isOutsideWorkspace
+        ? `User denied approval. ${boundaryReason} Consider writing to the workspace directory instead, or use a shell command to copy the file after creating it within the workspace.`
+        : "User denied approval.";
       dependencies.ui.printWarning?.(`Denied ${toolName}.`);
       turnState.toolEvents.push({
         tool: toolName,

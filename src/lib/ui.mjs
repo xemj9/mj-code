@@ -520,26 +520,44 @@ export function createTerminalUi(options = {}) {
     },
 
     async confirm(prompt) {
-      const currentRl = ensureInterface();
-      output.write(`${ansi.yellow("approve")} ${prompt} [y/N] `);
-      const answer = (await question(currentRl, "")).trim().toLowerCase();
-      return answer === "y" || answer === "yes";
+      promptActive = true;
+      slashPalette.close();
+      try {
+        const currentRl = ensureInterface();
+        setInteractiveRawMode(input, interactivePaletteEnabled, true);
+        output.write(`${ansi.yellow("approve")} ${prompt} [y/N] `);
+        const answer = (await question(currentRl, "")).trim().toLowerCase();
+        return answer === "y" || answer === "yes";
+      } finally {
+        promptActive = false;
+        slashPalette.close();
+        setInteractiveRawMode(input, interactivePaletteEnabled, false);
+      }
     },
 
     async confirmAction(context) {
-      const currentRl = ensureInterface();
-      const paths = summarizeCompactValues(context.touchedPaths, { limit: 3, formatter: compactPath });
+      promptActive = true;
+      slashPalette.close();
+      try {
+        const currentRl = ensureInterface();
+        setInteractiveRawMode(input, interactivePaletteEnabled, true);
+        const paths = summarizeCompactValues(context.touchedPaths, { limit: 3, formatter: compactPath });
 
-      output.write(`\n${ansi.bold(ansi.yellow(`Allow?`))}\n`);
-      output.write(`${ansi.dim(`  ${paths} · rollback ${context.rollbackAvailable ? "yes" : "no"}`)}\n`);
+        output.write(`\n${ansi.bold(ansi.yellow(`Allow?`))}\n`);
+        output.write(`${ansi.dim(`  ${paths} · rollback ${context.rollbackAvailable ? "yes" : "no"}`)}\n`);
 
-      const previewLines = buildApprovalPreviewLines(context);
-      for (const line of previewLines.slice(0, 3)) {
-        output.write(`${ansi.dim(line)}\n`);
+        const previewLines = buildApprovalPreviewLines(context);
+        for (const line of previewLines.slice(0, 3)) {
+          output.write(`${ansi.dim(line)}\n`);
+        }
+
+        const answer = (await question(currentRl, `${ansi.dim("y/N> ")}`)).trim().toLowerCase();
+        return answer === "y" || answer === "yes";
+      } finally {
+        promptActive = false;
+        slashPalette.close();
+        setInteractiveRawMode(input, interactivePaletteEnabled, false);
       }
-
-      const answer = (await question(currentRl, `${ansi.dim("y/N> ")}`)).trim().toLowerCase();
-      return answer === "y" || answer === "yes";
     },
 
     printBanner(status, sessionPath) {

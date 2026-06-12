@@ -541,10 +541,19 @@ export function createEnhancedTerminalUi(options: {
       if (!Boolean(output.isTTY)) {
         return true;
       }
-      const currentRl = ensureInterface();
-      output.write(`\n  ${ansi.bold(ansi.yellow("?"))} ${prompt}\n`);
-      const answer = (await question(currentRl, `  ${ansi.brightCyan("▸")} ${ansi.dim("[y/N]")} `)).trim().toLowerCase();
-      return answer === "y" || answer === "yes";
+      promptActive = true;
+      slashPalette.close();
+      try {
+        const currentRl = ensureInterface();
+        setInteractiveRawMode(input, interactivePaletteEnabled, true);
+        output.write(`\n  ${ansi.bold(ansi.yellow("?"))} ${prompt}\n`);
+        const answer = (await question(currentRl, `  ${ansi.brightCyan("▸")} ${ansi.dim("[y/N]")} `)).trim().toLowerCase();
+        return answer === "y" || answer === "yes";
+      } finally {
+        promptActive = false;
+        slashPalette.close();
+        setInteractiveRawMode(input, interactivePaletteEnabled, false);
+      }
     },
 
     async confirmAction(context: Record<string, unknown>) {
@@ -554,28 +563,37 @@ export function createEnhancedTerminalUi(options: {
         return true;
       }
 
-      const currentRl = ensureInterface();
+      promptActive = true;
+      slashPalette.close();
+      try {
+        const currentRl = ensureInterface();
+        setInteractiveRawMode(input, interactivePaletteEnabled, true);
 
-      const verb = inferToolVerb(String(context.toolName ?? "tool"));
-      const riskIcon = riskLevel === "HIGH" ? ansi.brightRed("⬤") : riskLevel === "MEDIUM" ? ansi.yellow("●") : ansi.green("●");
-      const paths = summarizeCompactValues(context.touchedPaths as string[], { limit: 3, formatter: compactPath });
+        const verb = inferToolVerb(String(context.toolName ?? "tool"));
+        const riskIcon = riskLevel === "HIGH" ? ansi.brightRed("⬤") : riskLevel === "MEDIUM" ? ansi.yellow("●") : ansi.green("●");
+        const paths = summarizeCompactValues(context.touchedPaths as string[], { limit: 3, formatter: compactPath });
 
-      output.write(`\n  ${ansi.bold(ansi.yellow(`Allow ${verb}?`))} ${riskIcon} ${ansi.dim(`risk=${riskLevel}`)}\n`);
-      if (paths !== "none") {
-        output.write(`  ${ansi.dim(`files · ${paths}`)}\n`);
+        output.write(`\n  ${ansi.bold(ansi.yellow(`Allow ${verb}?`))} ${riskIcon} ${ansi.dim(`risk=${riskLevel}`)}\n`);
+        if (paths !== "none") {
+          output.write(`  ${ansi.dim(`files · ${paths}`)}\n`);
+        }
+
+        // Show a small preview of changes
+        const previewLines = buildApprovalPreviewLines(context as Parameters<typeof buildApprovalPreviewLines>[0]);
+        for (const line of previewLines.slice(0, 3)) {
+          output.write(`  ${ansi.dim(line)}\n`);
+        }
+
+        const rollbackLabel = context.rollbackAvailable ? ansi.green("available") : ansi.dim("none");
+        output.write(`  ${ansi.dim("rollback")} ${rollbackLabel}\n`);
+
+        const answer = (await question(currentRl, `  ${ansi.brightCyan("▸")} ${ansi.dim("[y/N]")} `)).trim().toLowerCase();
+        return answer === "y" || answer === "yes";
+      } finally {
+        promptActive = false;
+        slashPalette.close();
+        setInteractiveRawMode(input, interactivePaletteEnabled, false);
       }
-
-      // Show a small preview of changes
-      const previewLines = buildApprovalPreviewLines(context as Parameters<typeof buildApprovalPreviewLines>[0]);
-      for (const line of previewLines.slice(0, 3)) {
-        output.write(`  ${ansi.dim(line)}\n`);
-      }
-
-      const rollbackLabel = context.rollbackAvailable ? ansi.green("available") : ansi.dim("none");
-      output.write(`  ${ansi.dim("rollback")} ${rollbackLabel}\n`);
-
-      const answer = (await question(currentRl, `  ${ansi.brightCyan("▸")} ${ansi.dim("[y/N]")} `)).trim().toLowerCase();
-      return answer === "y" || answer === "yes";
     },
 
     printBanner(status: Record<string, unknown>, sessionPath: string | null) {

@@ -165,16 +165,25 @@ export function evaluateToolPermission({
         };
       }
 
+      const outsidePaths: string[] = [];
       for (const targetPath of targetPaths) {
         if (!isSubPath(workspaceRoot, targetPath)) {
-          return {
-            allowed: false,
-            requiresApproval: false,
-            reason: `Path "${targetPath}" is outside the workspace root.`,
-            category,
-            targetPaths,
-          };
+          outsidePaths.push(targetPath);
         }
+      }
+
+      if (outsidePaths.length > 0) {
+        // Paths outside workspace require explicit user approval rather than
+        // being hard-blocked.  This allows the agent to write to locations
+        // like a sibling project directory or a shared notes folder when the
+        // user explicitly consents.
+        return {
+          allowed: true,
+          requiresApproval: true,
+          reason: `Path(s) outside workspace: ${outsidePaths.join(", ")}. User approval required.`,
+          category,
+          targetPaths,
+        };
       }
 
       return finalizePermission({
