@@ -4,6 +4,8 @@
 
 **An open-source terminal coding agent with intelligence, verification, and repair.**
 
+> 最后更新：2026-06-13
+
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Node ≥20](https://img.shields.io/badge/node-%E2%89%A520-green.svg)](https://nodejs.org/)
 [![Zero Runtime Deps](https://img.shields.io/badge/runtime_deps-0-brightgreen.svg)](./package.json)
